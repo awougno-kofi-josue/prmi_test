@@ -7,7 +7,7 @@ import { sendMessage } from "../lib/apiClient";
 export default function ChatLayout() {
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
-
+  
   const handleSendMessage = async (text) => {
     // Ajouter le message utilisateur
     setMessages((prev) => [...prev, { sender: "user", text }]);
@@ -31,10 +31,13 @@ export default function ChatLayout() {
   return (
     <div className="h-screen flex flex-col bg-white">
       <ChatHeader />
-      <div className="flex-1 overflow-y-auto px-3 py-2">
+      <div className="flex-1 overflow-y-auto px-6 py-2">
         <ChatMessages messages={messages} isTyping={isTyping} />
       </div>
-      <ChatInput onSendMessage={handleSendMessage} />
+      <div className="m-4 p-2">
+         <ChatInput onSendMessage={handleSendMessage} />
+      </div>
+     
     </div>
   );
 }

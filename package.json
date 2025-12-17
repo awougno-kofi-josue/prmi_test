@@ -30,8 +30,6 @@
   },
   "overrides": {
     "vite": "npm:rolldown-vite@7.2.5"
-  },
-  "scripts": {
-  "build": "vite build"
+  }
 }
-}
+

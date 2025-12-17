@@ -25,19 +25,27 @@ export default function App() {
     <Router>
       <div className="min-h-screen bg-gray-50 flex flex-col">
         {/* Navigation améliorée */}
-        <nav className="bg-blue-600 text-white shadow-md p-4 flex justify-between items-center">
-          <div className="text-lg font-bold">PRMI</div>
+        <nav className="bg-gray-600 text-white shadow-md p-4 flex justify-between items-center">
+          
+          <div className="flex justify-between row-2 items-center ">
+            <div className="bg-blue-500 w-8 h-12 rounded  "></div>
+            <div className="p-2">
+              <div className="text-lg font-bold">PRMI</div>
+              <p className="text-">Plateforme de regulation medicale inteligente</p>
+            </div>
+            
+          </div>
           <div className="flex gap-6">
-            <Link to="/" className="hover:text-blue-200 transition-colors">
+            <Link to="/" className="text-lg hover:underline transition-colors">
               Accueil
             </Link>
-            <Link to="/chat" className="hover:text-blue-200 transition-colors">
+            <Link to="/chat" className=" text-lg hover:underline transition-colors">
               ChatBot
             </Link>
-            <Link to="/pharmacies" className="hover:text-blue-200 transition-colors">
+            <Link to="/pharmacies" className="text-lg hover:underline transition-colors">
               Pharmacies de garde
             </Link>
-            {/* <Link to="/admin" className="hover:text-blue-200 transition-colors">
+            {/* <Link to="/admin" className="hover:underline transition-colors">
               Admin
             </Link> */}
           </div>
