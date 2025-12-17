@@ -6,7 +6,7 @@ export default function Register({ token, onRegistered }) {
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("admin");
   const [telephone, setTelephone] = useState("");
-  const [hospitalId, setHospitalId] = useState(0);
+  //const [hospitalId, setHospitalId] = useState(0);
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -33,7 +33,7 @@ export default function Register({ token, onRegistered }) {
             email,
             role,
             telephone,
-            hospital_id: Number(hospitalId),
+            //hospital_id: Number(hospitalId),
             password,
           }),
         }
@@ -58,7 +58,7 @@ export default function Register({ token, onRegistered }) {
       setPrenom("");
       setEmail("");
       setTelephone("");
-      setHospitalId(0);
+      //setHospitalId(0);
       setPassword("");
       if (onRegistered) onRegistered();
     } catch (err) {
@@ -101,13 +101,13 @@ export default function Register({ token, onRegistered }) {
         onChange={(e) => setTelephone(e.target.value)}
         className="w-full border p-2 rounded mb-2"
       />
-      <input
+      {/* <input
         type="number"
         placeholder="Hospital ID"
         value={hospitalId}
         onChange={(e) => setHospitalId(e.target.value)}
         className="w-full border p-2 rounded mb-2"
-      />
+      /> */}
       <input
         type="password"
         placeholder="Mot de passe"
