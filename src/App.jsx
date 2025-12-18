@@ -14,6 +14,7 @@ import AdminDashboard from "./admin/AdminDashboard";
 import HospitalPage from "./admin/HospitalPage";
 import BedPage from "./admin/BedPage";
 import StatsDashboard from "./admin/StatsDashboard";
+import CreateServiceForm from "./admin/CreateServiceForm";
 import ProtectedAdminRoute from "./admin/ProtectedAdminRoute";
 
 export default function App() {
@@ -41,6 +42,7 @@ export default function App() {
                 <Route index element={<AdminDashboard />} />
                 <Route path="hospitals" element={<HospitalPage />} />
                 <Route path="lits" element={<BedPage />} />
+                <Route path="services" element={<CreateServiceForm />} />
                 <Route path="stats" element={<StatsDashboard />} />
               </Route>
             </Route>
