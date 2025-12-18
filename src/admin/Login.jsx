@@ -56,6 +56,10 @@ export default function Login({ onLogin }) {
       >
         Se connecter
       </button>
+      {/* S'enregistrer */}
+      <div className="mt-4 text-center text-sm text-gray-500">
+        Pas encore de compte ? Contactez l'administrateur.
+      </div>
     </div>
   );
 }

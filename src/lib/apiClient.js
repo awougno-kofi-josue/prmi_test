@@ -1,92 +1,136 @@
-// api.js
+/* =========================
+   API CHATBOT (PUBLIC)
+========================= */
+
+const CHATBOT_API = "https://bilalbill-techsante-api.hf.space";
+
 export async function getStatus() {
-  const res = await fetch("https://bilalbill-techsante-api.hf.space/");
-  const data = await res.json();
-  return data;
+  const res = await fetch(`${CHATBOT_API}/`);
+  if (!res.ok) throw new Error("Chatbot indisponible");
+  return res.json();
 }
 
 export async function sendMessage(query, latitude = 0, longitude = 0) {
-  const res = await fetch("https://bilalbill-techsante-api.hf.space/triage", {
+  const res = await fetch(`${CHATBOT_API}/triage`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ query, latitude, longitude }),
   });
 
-  const data = await res.json();
-  return data; // data.reply ou data selon retour exact
+  if (!res.ok) throw new Error("Erreur chatbot");
+  return res.json();
 }
 
-//API Dashboard admin
-const API = "https://hospital-bed-management-ec42.onrender.com";
+/* =========================
+   API ADMIN (SECURISÉE)
+========================= */
 
-export function authHeaders(token) {
+const ADMIN_API = "https://hospital-bed-management-ec42.onrender.com";
+
+/* Helpers */
+function authHeaders(token) {
   return {
     Authorization: `Bearer ${token}`,
     "Content-Type": "application/json",
   };
 }
 
-/* AUTH */
+async function handleResponse(res) {
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(errorText || `Erreur API (${res.status})`);
+  }
+  return res.json();
+}
+
+/* =========================
+   AUTH
+========================= */
+
 export async function login(username, password) {
   const body = new URLSearchParams();
   body.append("username", username);
   body.append("password", password);
 
-  const res = await fetch(`${API}/api/v1/login`, {
+
+
+  const res = await fetch(`${ADMIN_API}/api/v1/login`, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body,
   });
+  
 
-  if (!res.ok) throw new Error("Login échoué");
-  return res.json();
+  return handleResponse(res);
 }
 
-/* HOSPITALS */
+/* =========================
+   HOSPITALS
+========================= */
+const token = localStorage.getItem("token");
 export const HospitalsAPI = {
-  list: (token) =>
-    fetch(`${API}/api/v1/hospitals/`, {
+  
+  list(token) {
+    
+    console.log("Token pour créer un hôpital :", token);
+    return fetch(`${ADMIN_API}/api/v1/api/v1/hospitals/`, {
+      method: "GET",
       headers: authHeaders(token),
-    }).then(r => r.json()),
+    }).then(handleResponse);
+  },
 
-  create: (data, token) =>
-    fetch(`${API}/api/v1/hospitals/`, {
+  create(data, token) {
+    console.log("Token pour créer un hôpital :", token);
+    return fetch(`${ADMIN_API}/api/v1/api/v1/hospitals/`, {
       method: "POST",
       headers: authHeaders(token),
       body: JSON.stringify(data),
-    }).then(r => r.json()),
+    }).then(handleResponse);
+  },
 };
 
-/* SERVICES */
+/* =========================
+   SERVICES
+========================= */
+
 export const ServicesAPI = {
-  list: (token) =>
-    fetch(`${API}/api/v1/services/`, {
+  list(token) {
+    return fetch(`${ADMIN_API}/api/v1/services/`, {
       headers: authHeaders(token),
-    }).then(r => r.json()),
+    }).then(handleResponse);
+  },
 };
 
-/* LITS */
+/* =========================
+   LITS
+========================= */
+
 export const BedsAPI = {
-  create: (data, token) =>
-    fetch(`${API}/api/v1/lits/`, {
+  create(data, token) {
+    return fetch(`${ADMIN_API}/api/v1/lits/`, {
       method: "POST",
       headers: authHeaders(token),
       body: JSON.stringify(data),
-    }).then(r => r.json()),
+    }).then(handleResponse);
+  },
 
-  updateStatus: (id, status, token) =>
-    fetch(`${API}/api/v1/lits/${id}/status`, {
+  updateStatus(id, status, token) {
+    return fetch(`${ADMIN_API}/api/v1/lits/${id}/status`, {
       method: "PATCH",
       headers: authHeaders(token),
       body: JSON.stringify({ status }),
-    }).then(r => r.json()),
+    }).then(handleResponse);
+  },
 };
 
-/* STATS */
+/* =========================
+   STATS
+========================= */
+
 export const StatsAPI = {
-  dashboard: (token) =>
-    fetch(`${API}/api/v1/stats/dashboard`, {
+  dashboard(token) {
+    return fetch(`${ADMIN_API}/api/v1/stats/dashboard`, {
       headers: authHeaders(token),
-    }).then(r => r.json()),
+    }).then(handleResponse);
+  },
 };
-

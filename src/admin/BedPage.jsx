@@ -7,7 +7,7 @@ export default function BedPage({ token }) {
 
   const load = async () => {
     const res = await fetch(
-      "https://hospital-bed-management-ec42.onrender.com/api/v1/lits/",
+      "https://hospital-bed-management-ec42.onrender.com/api/v1/api/v1/lits/api/v1/lits/1/status",
       { headers: { Authorization: `Bearer ${token}` } }
     );
     setBeds(await res.json());

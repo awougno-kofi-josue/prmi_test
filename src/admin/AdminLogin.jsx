@@ -1,17 +1,21 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { login } from "../lib/apiClient";
 
-export default function AdminLogin({ onSuccess }) {
+export default function AdminLogin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
       const res = await login(username, password);
       localStorage.setItem("token", res.access_token);
-      onSuccess(res.access_token);
-    } catch {
+      console.log("Token stocké dans le localStorage :", res.access_token);
+      navigate("/admin");
+    } catch (err) {
       setError("Identifiants incorrects");
     }
   };

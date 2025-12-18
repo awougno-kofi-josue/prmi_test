@@ -15,7 +15,7 @@ export default function BottomBar() {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-md flex justify-around py-2 md:hidden z-50">
-      <Link to="/" className={`flex flex-col items-center ${isActive("/")}`}>
+      <Link to="/accueil" className={`flex flex-col items-center ${isActive("/accueil")}`}>
         <AiOutlineHome size={22} />
         <span className="text-xs">Accueil</span>
       </Link>

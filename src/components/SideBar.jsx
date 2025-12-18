@@ -15,24 +15,24 @@ export default function Sidebar() {
 
   return (
     <div className="hidden md:flex flex-col w-60 bg-white border-r h-screen p-4 shadow-lg">
-      <div className="text-xl font-bold mb-8">PRMI</div>
+      <div className="text-xl font-bold mb-8">Plateforme de regulation medicale inteligente</div>
       
-      <Link to="/" className={`flex items-center gap-3 p-3 rounded ${isActive("/")}`}>
+      <Link to="/accueil" className={`flex items-center gap-3 p-3 rounded ${isActive("/accueil")}`}>
         <AiOutlineHome size={20} />
         Accueil
       </Link>
 
-      <Link to="/chat" className={`flex items-center gap-3 p-3 rounded ${isActive("/chat")}`}>
+      <Link to="chat" className={`flex items-center gap-3 p-3 rounded ${isActive("/chat")}`}>
         <BsChatDots size={20} />
         ChatBot
       </Link>
 
-      <Link to="/pharmacies" className={`flex items-center gap-3 p-3 rounded ${isActive("/pharmacies")}`}>
+      <Link to="pharmacies" className={`flex items-center gap-3 p-3 rounded ${isActive("/pharmacies")}`}>
         <MdLocalPharmacy size={20} />
         Pharmacies
       </Link>
 
-      <Link to="/admin" className={`flex items-center gap-3 p-3 rounded ${isActive("/admin")}`}>
+      <Link to="admin" className={`flex items-center gap-3 p-3 rounded ${isActive("/admin")}`}>
         <RiAdminLine size={20} />
         Admin
       </Link>
