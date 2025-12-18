@@ -129,7 +129,7 @@ export const BedsAPI = {
 
 export const StatsAPI = {
   dashboard(token) {
-    return fetch(`${ADMIN_API}/api/v1/stats/dashboard`, {
+    return fetch(`${ADMIN_API}/api/v1/api/v1/stats/dashboard`, {
       headers: authHeaders(token),
     }).then(handleResponse);
   },

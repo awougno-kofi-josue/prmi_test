@@ -41,6 +41,7 @@ export default function HospitalPage() {
         <thead className="bg-gray-100">
           <tr>
             <th className="p-3 text-left">Nom</th>
+            <th className="p-3 text-left">Adresse</th>
             <th className="p-3 text-left">Ville</th>
           </tr>
         </thead>
@@ -48,7 +49,9 @@ export default function HospitalPage() {
           {hospitals.map(h => (
             <tr key={h.id} className="border-t">
               <td className="p-3">{h.nom}</td>
-              <td className="p-3">{h.region}</td>
+              
+              <td className="p-3">{h.adresse}</td>
+              <td className="p-3">{h.ville}</td>
             </tr>
           ))}
         </tbody>

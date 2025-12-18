@@ -29,9 +29,9 @@ export default function AdminLayout() {
             <NavLink to="/admin/hospitals" className={linkClass}>
               Hôpitaux
             </NavLink>
-            <NavLink to="/admin/lits" className={linkClass}>
+            {/* <NavLink to="/admin/lits" className={linkClass}>
               Lits
-            </NavLink>
+            </NavLink> */}
             <NavLink to="/admin/stats" className={linkClass}>
               Statistiques
             </NavLink>

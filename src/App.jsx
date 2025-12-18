@@ -26,8 +26,9 @@ export default function App() {
 
         <div className="flex-1 flex flex-col pb-16 md:pb-0">
           <Routes>
-
+{/* Tous les liens non definis redirige vers /accueil */}
             {/* PUBLIC */}
+            <Route path="*" element={<Home />} />
             <Route path="/accueil" element={<Home />} />
             <Route path="/chat" element={<ChatLayout />} />
 
