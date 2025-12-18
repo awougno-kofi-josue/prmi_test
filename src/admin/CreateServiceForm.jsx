@@ -114,7 +114,7 @@ export default function CreateServiceForm() {
           <option value="">Sélectionnez un hôpital</option>
           {hospitals.map((h) => (
             <option key={h.id} value={h.id}>
-              {h.nom_hopital}
+              {h.nom}
             </option>
           ))}
         </select>

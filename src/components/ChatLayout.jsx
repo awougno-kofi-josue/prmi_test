@@ -1,43 +1,47 @@
-import React, { useState } from "react";
-import ChatInput from "./ChatInput";
+// ChatLayout.jsx
+import React, { useState, useEffect } from "react";
 import ChatMessages from "./ChatMessages";
-import ChatHeader from "./ChatHeader";
-import { sendMessage } from "../lib/apiClient";
+import ChatInput from "./ChatInput";
 
 export default function ChatLayout() {
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
-  
-  const handleSendMessage = async (text) => {
-    // Ajouter le message utilisateur
-    setMessages((prev) => [...prev, { sender: "user", text }]);
-    setIsTyping(true);
+  const [locationSent, setLocationSent] = useState(false);
 
-    try {
-      // Appel unique à l'API
-      const res = await sendMessage(text, 0, 0); // latitude / longitude si dispo
-      const botText = res.response || "Réponse vide"; // récupère juste la réponse
-      setMessages((prev) => [...prev, { sender: "bot", text: botText }]);
-    } catch (err) {
-      setMessages((prev) => [
-        ...prev,
-        { sender: "bot", text: "Erreur API, réessaye plus tard" },
-      ]);
-    } finally {
-      setIsTyping(false);
+  // Demande de géolocalisation au chargement
+  useEffect(() => {
+    if (!locationSent && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setMessages((prev) => [
+            ...prev,
+            { sender: "user", text: `Voici ma position : lat=${latitude}, lon=${longitude}` },
+          ]);
+          setLocationSent(true);
+        },
+        (error) => {
+          console.log("Localisation refusée ou impossible :", error);
+        }
+      );
     }
+  }, [locationSent]);
+
+  const sendMessage = (text) => {
+    setMessages((prev) => [...prev, { sender: "user", text }]);
+
+    // Simulation de réponse du bot
+    setIsTyping(true);
+    setTimeout(() => {
+      setMessages((prev) => [...prev, { sender: "bot", text: `Vous avez dit : "${text}"` }]);
+      setIsTyping(false);
+    }, 1000);
   };
 
   return (
-    <div className="h-screen flex flex-col bg-white">
-      <ChatHeader />
-      <div className="flex-1 overflow-y-auto px-6 py-2">
-        <ChatMessages messages={messages} isTyping={isTyping} />
-      </div>
-      <div className="m-4 p-2">
-         <ChatInput onSendMessage={handleSendMessage} />
-      </div>
-     
+    <div className="flex flex-col h-screen bg-white">
+      <ChatMessages messages={messages} isTyping={isTyping} />
+      <ChatInput onSend={sendMessage} />
     </div>
   );
 }

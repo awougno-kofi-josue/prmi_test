@@ -32,7 +32,7 @@ export default function Sidebar() {
         Pharmacies
       </Link>
 
-      <Link to="admin" className={`flex items-center gap-3 p-3 rounded ${isActive("/admin")}`}>
+      <Link to="/admin" className={`flex items-center gap-3 p-3 rounded ${isActive("/admin")}`}>
         <RiAdminLine size={20} />
         Admin
       </Link>

@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from 'react-router-dom';
 
 export default function Home() {
   return (
@@ -11,18 +12,19 @@ export default function Home() {
       </p>
 
       <div className="flex flex-col sm:flex-row gap-4">
-        <a
-          href="/chat"
+        
+        <NavLink
+          to="/chat"
           className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
         >
           Démarrer le Chat
-        </a>
-        <a
-          href="/admin/login"
+        </NavLink>
+        <NavLink
+          to="/admin"
           className="px-6 py-3 border border-green-600 text-green-600 rounded-lg hover:bg-green-50 transition"
         >
           Espace Admin
-        </a>
+        </NavLink>
       </div>
 
       <div className="mt-12 text-center text-gray-500">

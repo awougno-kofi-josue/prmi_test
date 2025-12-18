@@ -1,38 +1,46 @@
-import React, { useState } from "react";
-import { FiSend } from "react-icons/fi"; // Icône d’envoi
+// ChatLayout.jsx
+import React, { useState, useEffect } from "react";
+import ChatMessages from "./ChatMessages";
+import ChatInput from "./ChatInput";
 
-export default function ChatInput({ onSendMessage }) {
-  const [text, setText] = useState("");
+export default function ChatLayout() {
+  const [messages, setMessages] = useState([]);
+  const [isTyping, setIsTyping] = useState(false);
+  const [locationSent, setLocationSent] = useState(false);
 
-  // Fonction pour envoyer le message
-  const handleSend = () => {
-    if (!text.trim()) return; // ne rien envoyer si vide
-    onSendMessage(text);       // callback vers le parent
-    setText("");               // reset du champ
+  // Demande de géolocalisation une seule fois
+  useEffect(() => {
+    if (!locationSent && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const { latitude, longitude } = pos.coords;
+          setMessages((prev) => [
+            ...prev,
+            { sender: "user", text: `Voici ma position : lat=${latitude}, lon=${longitude}` },
+          ]);
+          setLocationSent(true);
+        },
+        (err) => console.log("Localisation refusée ou impossible :", err)
+      );
+    }
+  }, [locationSent]);
+
+  // Envoi d’un message
+  const handleSendMessage = (text) => {
+    setMessages((prev) => [...prev, { sender: "user", text }]);
+
+    // Simulation d’une réponse du bot
+    setIsTyping(true);
+    setTimeout(() => {
+      setMessages((prev) => [...prev, { sender: "bot", text: `Vous avez dit : "${text}"` }]);
+      setIsTyping(false);
+    }, 1000);
   };
 
   return (
-    <div className="flex items-center px-4 py-3 bg-white border-t shadow-inner rounded-b-lg">
-      {/* Champ de texte */}
-      <input
-        type="text"
-        className="flex-1 border border-gray-300 rounded-full px-4 py-2 mr-3 focus:outline-none focus:ring-2 focus:ring-green-400 transition-colors"
-        placeholder="Écrivez votre message..."
-        aria-label="Message"
-        value={text}
-        autoFocus
-        onChange={(e) => setText(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && handleSend()}
-      />
-
-      {/* Bouton envoyer */}
-      <button
-        onClick={handleSend}
-        className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-full flex items-center justify-center shadow-md transition-transform transform hover:scale-105"
-        aria-label="Envoyer message"
-      >
-        <FiSend className="text-lg" />
-      </button>
+    <div className="flex flex-col h-screen bg-white">
+      <ChatMessages messages={messages} isTyping={isTyping} />
+      <ChatInput onSendMessage={handleSendMessage} />
     </div>
   );
 }
