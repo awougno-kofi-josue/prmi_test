@@ -40,11 +40,11 @@ export default function App() {
             {/* ADMIN ROUTES PROTECTED */}
             <Route element={<ProtectedAdminRoute />}>
               <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<AdminDashboard />} />
+                <Route index element={<StatsDashboard />} />
                 <Route path="hospitals" element={<HospitalPage />} />
                 <Route path="lits" element={<BedPage />} />
                 <Route path="services" element={<CreateServiceForm />} />
-                <Route path="stats" element={<StatsDashboard />} />
+                
               </Route>
             </Route>
           </Routes>

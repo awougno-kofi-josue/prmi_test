@@ -1,46 +1,31 @@
-// ChatLayout.jsx
-import React, { useState, useEffect } from "react";
-import ChatMessages from "./ChatMessages";
-import ChatInput from "./ChatInput";
+import React, { useState } from "react";
+import { FiSend } from "react-icons/fi";
 
-export default function ChatLayout() {
-  const [messages, setMessages] = useState([]);
-  const [isTyping, setIsTyping] = useState(false);
-  const [locationSent, setLocationSent] = useState(false);
+export default function ChatInput({ onSendMessage }) {
+  const [text, setText] = useState("");
 
-  // Demande de géolocalisation une seule fois
-  useEffect(() => {
-    if (!locationSent && navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const { latitude, longitude } = pos.coords;
-          setMessages((prev) => [
-            ...prev,
-            { sender: "user", text: `Voici ma position : lat=${latitude}, lon=${longitude}` },
-          ]);
-          setLocationSent(true);
-        },
-        (err) => console.log("Localisation refusée ou impossible :", err)
-      );
-    }
-  }, [locationSent]);
-
-  // Envoi d’un message
-  const handleSendMessage = (text) => {
-    setMessages((prev) => [...prev, { sender: "user", text }]);
-
-    // Simulation d’une réponse du bot
-    setIsTyping(true);
-    setTimeout(() => {
-      setMessages((prev) => [...prev, { sender: "bot", text: `Vous avez dit : "${text}"` }]);
-      setIsTyping(false);
-    }, 1000);
+  const handleSend = () => {
+    if (!text.trim()) return;
+    onSendMessage(text);
+    setText("");
   };
 
   return (
-    <div className="flex flex-col h-screen bg-white">
-      <ChatMessages messages={messages} isTyping={isTyping} />
-      <ChatInput onSendMessage={handleSendMessage} />
+    <div className="flex items-center px-4 py-3 bg-white border-t shadow-inner rounded-b-lg">
+      <input
+        type="text"
+        className="flex-1 border border-gray-300 rounded-full px-4 py-2 mr-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        placeholder="Écrivez votre message..."
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && handleSend()}
+      />
+      <button
+        onClick={handleSend}
+        className="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full flex items-center justify-center shadow-md transition-colors"
+      >
+        <FiSend className="text-lg" />
+      </button>
     </div>
   );
 }

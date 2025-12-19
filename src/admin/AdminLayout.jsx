@@ -37,9 +37,7 @@ export default function AdminLayout() {
             {/* <NavLink to="/admin/lits" className={linkClass}>
               Lits
             </NavLink> */}
-            <NavLink to="/admin/stats" className={linkClass}>
-              Statistiques
-            </NavLink>
+            
           </nav>
 
           {/* Burger mobile */}

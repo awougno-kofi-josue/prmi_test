@@ -1,82 +1,76 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { FaHospital, FaBed, FaUserInjured } from "react-icons/fa";
 import { StatsAPI } from "../lib/apiClient";
 
 export default function StatsDashboard() {
-  const [stats, setStats] = useState(null);
+  const [stats, setStats] = useState({
+    availableBeds: 0,
+    admittedPatients: 0,
+    hospitals: 0,
+  });
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  async function loadStats() {
+  const loadStats = async () => {
     try {
+      setLoading(true);
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Token manquant");
+     
+      const data = await StatsAPI.dashboard(token); // peut renvoyer string ou JSON
+      // si data est string, on met 0 par défaut
+      const parsed = typeof data === "string" ? {
+        availableBeds: 0,
+        admittedPatients: 0,
+        hospitals: 0,
+      } : data;
 
-      const data = await StatsAPI.dashboard(token);
-      setStats(data);
+      setStats(parsed);
       setError(null);
     } catch (err) {
       console.error(err);
       setError("Impossible de charger les statistiques");
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     loadStats();
-
-    const interval = setInterval(loadStats, 15000); // 15s
-
+    const interval = setInterval(loadStats, 15000);
     return () => clearInterval(interval);
   }, []);
+  
 
-  if (error) {
-    return (
-      <p className="text-red-600 font-medium bg-red-50 p-4 rounded-xl">
-        {error}
-      </p>
-    );
-  }
+  const items = [
+    { label: "Lits disponibles", key: "availableBeds", icon: <FaBed /> },
+    { label: "Patients admis", key: "admittedPatients", icon: <FaUserInjured /> },
+    { label: "Hôpitaux", key: "hospitals", icon: <FaHospital /> },
+  ];
 
-  if (!stats) {
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {[1, 2, 3].map((i) => (
-          <div
-            key={i}
-            className="bg-white p-5 rounded-xl shadow animate-pulse"
-          >
-            <div className="h-4 bg-gray-200 rounded w-1/2 mb-3"></div>
-            <div className="h-8 bg-gray-300 rounded w-1/3"></div>
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {items.map((item) => (
+        <div
+          key={item.key}
+          className="bg-white p-6 rounded-xl shadow-md flex flex-col items-start hover:shadow-lg transition-shadow"
+        >
+          <div className="flex items-center gap-3 mb-2 text-gray-500">
+            <div className="text-2xl">{item.icon}</div>
+            <span className="font-semibold">{item.label}</span>
           </div>
-        ))}
-      </div>
-    );
-  }
-
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <StatCard
-        label="Lits disponibles"
-        value={stats.available_beds}
-        color="text-green-700"
-      />
-      <StatCard
-        label="Patients admis"
-        value={stats.admitted_patients}
-        color="text-gray-800"
-      />
-      <StatCard
-        label="Hôpitaux"
-        value={stats.hospitals}
-        color="text-gray-800"
-      />
-    </div>
-  );
-}
-
-function StatCard({ label, value, color }) {
-  return (
-    <div className="bg-white p-5 rounded-xl shadow transition hover:scale-[1.02]">
-      <p className="text-gray-500 text-sm">{label}</p>
-      <p className={`text-3xl font-bold ${color}`}>{value}</p>
+          <div className="text-3xl font-bold text-gray-800">
+            {loading ? "..." : stats[item.key] ?? 0}
+          </div>
+        </div>
+      ))}
+      {error && (
+        <p className="col-span-full text-red-600 font-medium bg-red-50 p-4 rounded-xl">
+          {error}
+        </p>
+      )}
     </div>
   );
 }
