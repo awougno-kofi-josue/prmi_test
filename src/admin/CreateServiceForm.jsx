@@ -87,6 +87,7 @@ export default function CreateServiceForm() {
         />
         <input
           type="number"
+          min="1"
           name="capacite_totale"
           value={form.capacite_totale}
           onChange={handleChange}

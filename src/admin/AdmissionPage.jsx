@@ -1,52 +1,42 @@
 import { useEffect, useState } from "react";
+import { ServicesAPI } from "../lib/apiClient";
 import AdmissionForm from "./AdmissionForm";
-import DischargeButton from "./DischargeButton";
 
-export default function AdmissionPage({ token }) {
-  const [admissions, setAdmissions] = useState([]);
+export default function AdmissionPage() {
+  const [services, setServices] = useState([]);
 
-  const load = async () => {
-    const res = await fetch(
-      "https://hospital-bed-management-ec42.onrender.com/api/v1/admissions/",
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
-    setAdmissions(await res.json());
+  // Charge la liste des services
+  const loadServices = async () => {
+    try {
+      const data = await ServicesAPI.list();
+      setServices(data); // data est un tableau de services
+    } catch (e) {
+      console.error("Erreur services :", e.message);
+    }
   };
 
-  useEffect(load, []);
+  useEffect(() => {
+    loadServices();
+  }, []);
 
   return (
-    <>
-      <AdmissionForm token={token} onCreated={load} />
+    <div className="space-y-6 p-4">
+      <h2 className="text-xl font-bold">Gestion des admissions</h2>
 
-      <table className="w-full bg-white rounded shadow">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="p-3">Patient</th>
-            <th className="p-3">Lit</th>
-            <th className="p-3">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {admissions.map(a => (
-            <tr key={a.id} className="border-t text-center">
-              <td className="p-3">{a.patient_id}</td>
-              <td className="p-3">{a.bed_id}</td>
-              <td className="p-3">
-                {!a.discharge_date && (
-                  <DischargeButton
-                    admissionId={a.id}
-                    token={token}
-                    onDone={load}
-                  />
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </>
+      <div className="grid md:grid-cols-3 gap-4">
+        {services.map((s) => (
+          <div key={s.id} className="bg-white p-4 rounded-xl shadow">
+            <h3 className="font-semibold">{s.nom_service}</h3>
+            <p className="text-sm text-gray-500">
+              Lits disponibles : {s.lits_disponibles}/{s.capacite_totale}
+            </p>
+
+            {s.lits_disponibles <= 0 && (
+            <AdmissionForm serviceId={s.id} onSuccess={loadServices} />
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }

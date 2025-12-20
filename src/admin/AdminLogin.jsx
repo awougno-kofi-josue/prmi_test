@@ -6,10 +6,14 @@ export default function AdminLogin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // <--- ajouté
 
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+    setLoading(true);      // <--- commencer le chargement
+    setError("");
+
     try {
       const res = await login(username, password);
       localStorage.setItem("token", res.access_token);
@@ -17,6 +21,8 @@ export default function AdminLogin() {
       navigate("/admin");
     } catch (err) {
       setError("Identifiants incorrects");
+    } finally {
+      setLoading(false);    // <--- fin du chargement
     }
   };
 
@@ -46,9 +52,10 @@ export default function AdminLogin() {
 
         <button
           onClick={handleLogin}
-          className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg"
+          disabled={loading}  // optionnel : bloque le bouton pendant la connexion
+          className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg disabled:opacity-50"
         >
-          Se connecter
+          {loading ? "Connexion..." : "Connecter"}
         </button>
       </div>
     </div>

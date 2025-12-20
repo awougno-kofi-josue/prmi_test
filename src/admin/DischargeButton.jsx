@@ -1,24 +1,28 @@
-export default function DischargeButton({ admissionId, token, onDone }) {
-  const discharge = async () => {
-    await fetch(
-      `https://hospital-bed-management-ec42.onrender.com/api/v1/admissions/${admissionId}/discharge`,
-      {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+import { useState } from "react";
+import { AdmissionsAPI } from "../lib/apiClient";
 
-    onDone();
+export default function DischargeButton({ admissionId, onDone }) {
+  const [loading, setLoading] = useState(false);
+
+  const discharge = async () => {
+    try {
+      setLoading(true);
+      await AdmissionsAPI.discharge(admissionId);
+      onDone(); // recharge admissions
+    } catch (e) {
+      console.error("Erreur discharge :", e.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <button
       onClick={discharge}
-      className="bg-gray-700 hover:bg-gray-800 text-white px-3 py-1 rounded text-sm"
+      disabled={loading}
+      className="bg-red-600 text-white px-3 py-1 rounded disabled:opacity-50"
     >
-      Sortie
+      {loading ? "..." : "Sortie"}
     </button>
   );
 }

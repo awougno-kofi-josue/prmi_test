@@ -25,112 +25,112 @@ export async function sendMessage(query, latitude = 0, longitude = 0) {
    API ADMIN (SECURISÉE)
 ========================= */
 
+
 const ADMIN_API = "https://hospital-bed-management-ec42.onrender.com";
-
-/* Helpers */
-function authHeaders(token) {
-  return {
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-  };
-}
-
-async function handleResponse(res) {
-  if (!res.ok) {
-    const errorText = await res.text();
-    throw new Error(errorText || `Erreur API (${res.status})`);
-  }
-  return res.json();
-}
-
-/* =========================
-   AUTH
-========================= */
 
 export async function login(username, password) {
   const body = new URLSearchParams();
   body.append("username", username);
   body.append("password", password);
 
-
-
   const res = await fetch(`${ADMIN_API}/api/v1/login`, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body,
   });
-  
 
-  return handleResponse(res);
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text || "Erreur login");
+  }
+
+  const data = await res.json();
+  localStorage.setItem("token", data.token); // si ton backend renvoie un token
+  return data;
 }
 
 /* =========================
-   HOSPITALS
+   Request centralisée
 ========================= */
-const token = localStorage.getItem("token");
-export const HospitalsAPI = {
-  
-  list(token) {
-    
-    console.log("Token pour créer un hôpital :", token);
-    return fetch(`${ADMIN_API}/api/v1/api/v1/hospitals/`, {
-      method: "GET",
-      headers: authHeaders(token),
-    }).then(handleResponse);
-  },
+async function request(url, options = {}) {
+  const token = localStorage.getItem("token");
 
-  create(data, token) {
-    console.log("Token pour créer un hôpital :", token);
-    return fetch(`${ADMIN_API}/api/v1/api/v1/hospitals/`, {
-      method: "POST",
-      headers: authHeaders(token),
-      body: JSON.stringify(data),
-    }).then(handleResponse);
-  },
-};
+  const res = await fetch(ADMIN_API + url, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...(token && { Authorization: `Bearer ${token}` }),
+    },
+  });
+
+  if (res.status === 401) {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+    throw new Error("Session expirée");
+  }
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text || "Erreur API");
+  }
+
+  return res.json();
+}
 
 /* =========================
-   SERVICES
+   Services
 ========================= */
-
 export const ServicesAPI = {
-  list(token) {
-    return fetch(`${ADMIN_API}/api/v1/services/`, {
-      headers: authHeaders(token),
-    }).then(handleResponse);
-  },
+  list: () => request("/api/v1/api/v1/services/"),
 };
 
 /* =========================
-   LITS
+   Admissions
 ========================= */
-
-export const BedsAPI = {
-  create(data, token) {
-    return fetch(`${ADMIN_API}/api/v1/lits/`, {
+export const AdmissionsAPI = {
+  list: () => request("/api/v1/api/v1/admissions/"),
+  create: (data) =>
+    request("/api/v1/api/v1/admissions/", {
       method: "POST",
-      headers: authHeaders(token),
       body: JSON.stringify(data),
-    }).then(handleResponse);
-  },
-
-  updateStatus(id, status, token) {
-    return fetch(`${ADMIN_API}/api/v1/lits/${id}/status`, {
+    }),
+  discharge: (id) =>
+    request(`/api/v1/api/v1/admissions/${id}/discharge`, {
       method: "PATCH",
-      headers: authHeaders(token),
-      body: JSON.stringify({ status }),
-    }).then(handleResponse);
-  },
+    }),
 };
 
 /* =========================
-   STATS
+   Hospitals
 ========================= */
+export const HospitalsAPI = {
+  list: () => request("/api/v1/api/v1/hospitals/"),
+  create: (data) =>
+    request("/api/v1/api/v1/hospitals/", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+};
 
+/* =========================
+   Beds
+========================= */
+export const BedsAPI = {
+  create: (data) =>
+    request("/api/v1/api/v1/lits/", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  updateStatus: (id, status) =>
+    request(`/api/v1/api/v1/lits/${id}/status`, {
+      method: "PATCH",
+      body: JSON.stringify({ status }),
+    }),
+};
+
+/* =========================
+   Stats
+========================= */
 export const StatsAPI = {
-  dashboard(token) {
-    return fetch(`${ADMIN_API}/api/v1/api/v1/stats/dashboard`, {
-      headers: authHeaders(token),
-    }).then(handleResponse);
-  },
+  dashboard: () => request("/api/v1/api/v1/stats/dashboard"),
 };
