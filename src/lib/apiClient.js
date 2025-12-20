@@ -65,7 +65,7 @@ async function request(url, options = {}) {
 
   if (res.status === 401) {
     localStorage.removeItem("token");
-    window.location.href = "/login";
+    window.location.href = "admin/login";
     throw new Error("Session expirée");
   }
 

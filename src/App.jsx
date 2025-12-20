@@ -17,6 +17,7 @@ import BedPage from "./admin/BedPage";
 import StatsDashboard from "./admin/StatsDashboard";
 import CreateServiceForm from "./admin/CreateServiceForm";
 import AdmissionPage from "./admin/AdmissionPage";
+import TeamSection from "./page/TeamSection";
 
 /* Protected Route */
 import ProtectedAdminRoute from "./admin/ProtectedAdminRoute";
@@ -35,6 +36,7 @@ export default function App() {
             {/* PUBLIC ROUTES */}
             <Route path="*" element={<Home />} />
             <Route path="/accueil" element={<Home />} />
+            <Route path="team" element={<TeamSection/>}/>
             <Route path="/chat" element={<ChatLayout />} />
             <Route path="/admin/login" element={<AdminLogin />} />
 
@@ -46,6 +48,7 @@ export default function App() {
                 <Route path="lits" element={<BedPage />} />
                 <Route path="services" element={<CreateServiceForm />} />
                 <Route path="admissions" element={<AdmissionPage />} />
+                
                 
               </Route>
             </Route>

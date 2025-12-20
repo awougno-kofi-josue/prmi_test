@@ -26,10 +26,13 @@ export default function Home() {
           Espace Admin
         </NavLink>
       </div>
-
+{/* Equipe techniques */}
       <div className="mt-12 text-center text-gray-500">
         &copy; 2025 PRMI. Tous droits réservés.
+        <div className="mt-4"></div>
+          Développé par l'équipe technique PRMI. <NavLink to="/team" className="text-green-600 hover:underline">Rencontrez notre équipe</NavLink>
+        </div>
       </div>
-    </div>
+    
   );
 }
