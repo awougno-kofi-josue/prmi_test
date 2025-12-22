@@ -17,6 +17,7 @@ export default function HospitalList({ token }) {
     <tr>
       <th className="p-3 text-left">Nom</th>
       <th className="p-3 text-left">Ville</th>
+      {/* <th className="p-3 text-left">Actions</th> */}
     </tr>
   </thead>
   <tbody>
@@ -24,6 +25,14 @@ export default function HospitalList({ token }) {
       <tr key={h.id} className="border-t hover:bg-gray-50">
         <td className="p-3">{h.name}</td>
         <td className="p-3">{h.city}</td>
+        {/* <td className="p-3">
+          <a
+            href={`/admin/hospitals/${h.id}`}
+            className="text-blue-600 hover:underline"
+          >
+            Voir
+          </a> */}
+        </td>
       </tr>
     ))}
   </tbody>

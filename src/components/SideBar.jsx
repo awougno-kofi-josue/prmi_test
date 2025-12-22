@@ -14,7 +14,7 @@ export default function Sidebar() {
       : "text-gray-600 hover:bg-gray-100";
 
   return (
-    <div className="hidden md:flex flex-col w-60 bg-white border-r h-screen p-4 shadow-lg">
+    <div className="hidden md:flex flex-col w-40 bg-white border-r h-full p-4 space-y-4">
       <div className="text-xl font-bold mb-8">Plateforme de regulation medicale inteligente</div>
       
       <Link to="/accueil" className={`flex items-center gap-3 p-3 rounded ${isActive("/accueil")}`}>

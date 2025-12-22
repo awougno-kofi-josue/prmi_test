@@ -43,15 +43,21 @@ export default function HospitalPage() {
             <th className="p-3 text-left">Nom</th>
             <th className="p-3 text-left">Adresse</th>
             <th className="p-3 text-left">Ville</th>
+            {/* <th className="p-3 text-left">Actions</th> */}
           </tr>
         </thead>
         <tbody>
           {hospitals.map(h => (
-            <tr key={h.id} className="border-t">
+            <tr key={h.id} className="border-t scrollhover:bg-gray-50">
               <td className="p-3">{h.nom}</td>
               
               <td className="p-3">{h.adresse}</td>
               <td className="p-3">{h.ville}</td>
+              {/* <td className="p-3">
+                <button className="text-blue-600 hover:underline">
+                  Voir
+                </button>
+              </td> */}
             </tr>
           ))}
         </tbody>
