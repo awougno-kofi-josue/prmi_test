@@ -2,24 +2,28 @@ import React from "react";
 
 const teamMembers = [
   {
-    name: "Josue Awougno",
-    role: "Développeur Principal / Back-end",
-    image: "https://via.placeholder.com/150", // tu peux remplacer par de vraies photos
+    name: "Kofi Yosua Awougno",
+    role: "Front-end / UX Designer",
+    image: "https://via.placeholder.com/150",
+    contact: "kofiyosuaawougno@gmail.com " 
   },
   {
     name: "Bilali Soulemane",
-    role: "Front-end / UI Designer",
+    role: "Lead Tech / IA",
     image: "https://via.placeholder.com/150",
+    contact: "soulemanebilal74@gmail.com"
   },
   {
-    name: "Medard M.",
-    role: "Data Scientist / IA",
+    name: "Medard Minlekib",
+    role: "Data analyst / Back-end",
     image: "https://via.placeholder.com/150",
+    contact: "minlekibyendouboan@gmail.com"
   },
   {
-    name: "Kadanga P.",
-    role: "Chef de projet / Coordination",
+    name: "Larissa Kadanga",
+    role: "Medecin Conseil / Superviseur",
     image: "https://via.placeholder.com/150",
+    contact: "kadangalarissa@gmail.com"
   },
 ];
 
@@ -38,7 +42,7 @@ export default function TeamSection() {
               <img
                 src={member.image}
                 alt={member.name}
-                className="w-24 h-24 rounded-full object-cover mb-4"
+                className="w-24 h-24 rounded-full object-cover mb-4 shadow-md"
               />
               <h3 className="text-lg font-semibold">{member.name}</h3>
               <p className="text-gray-500 mt-1">{member.role}</p>

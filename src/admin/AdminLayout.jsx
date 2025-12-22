@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { useState } from "react";
+import { AdmissionsAPI } from './../lib/apiClient';
 
 export default function AdminLayout() {
   const [open, setOpen] = useState(false);
@@ -61,12 +62,13 @@ export default function AdminLayout() {
             <NavLink onClick={() => setOpen(false)} to="/admin/hospitals" className={linkClass}>
               Hôpitaux
             </NavLink>
-            <NavLink onClick={() => setOpen(false)} to="/admin/lits" className={linkClass}>
-              Lits
+            <NavLink onClick={() => setOpen(false)} to="/admin/services" className={linkClass}>
+              Services 
             </NavLink>
-            <NavLink onClick={() => setOpen(false)} to="/admin/stats" className={linkClass}>
-              Statistiques
+            <NavLink onClick={() => setOpen(false)} to="/admin/admissions" className={linkClass}>
+              Admission
             </NavLink>
+            
           </nav>
         )}
       </header>
