@@ -1,36 +1,31 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { FaHospital, FaBed, FaUserInjured } from "react-icons/fa";
-import { StatsAPI } from "../lib/apiClient";
+import { StatsAPI, HospitalsAPI } from "../lib/apiClient";
 
 export default function StatsDashboard() {
-  const [stats, setStats] = useState({
-    availableBeds: 0,
-    admittedPatients: 0,
-    hospitals: 0,
-  });
-  const navigate = useNavigate();
+  const [stats, setStats] = useState(null);
+  const [count, setCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const loadStats = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
-      if (!token) throw new Error("Token manquant");
-     
-      const data = await StatsAPI.dashboard(token); // peut renvoyer string ou JSON
-      // si data est string, on met 0 par défaut
-      const parsed = typeof data === "string" ? {
-        availableBeds: 0,
-        admittedPatients: 0,
-        hospitals: 0,
-      } : data;
-
-      setStats(parsed);
       setError(null);
+
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("Non authentifié");
+
+      const data = await StatsAPI.dashboard(token);
+      const data1=await HospitalsAPI.list();
+
+      const count=data1.length;
+      setCount(count);
+      setStats(data);
+      
+      
     } catch (err) {
-      console.error(err);
+      console.error("Erreur stats :", err);
       setError("Impossible de charger les statistiques");
     } finally {
       setLoading(false);
@@ -42,34 +37,53 @@ export default function StatsDashboard() {
     const interval = setInterval(loadStats, 15000);
     return () => clearInterval(interval);
   }, []);
-  
 
   const items = [
-    { label: "Lits disponibles", key: "availableBeds", icon: <FaBed /> },
-    { label: "Patients admis", key: "admittedPatients", icon: <FaUserInjured /> },
-    { label: "Hôpitaux", key: "hospitals", icon: <FaHospital /> },
+    {
+      label: "Lits disponibles",
+      value: stats?.lits_disponibles ?? 0,
+      icon: <FaBed className="text-blue-600" />,
+    },
+    {
+      label: "Patients admis",
+      value: stats?.patients_admis ?? 0,
+      icon: <FaUserInjured className="text-red-600" />,
+    },
+    {
+      label: "Hôpitaux",
+      value: count ?? 0,
+      icon: <FaHospital className="text-green-600" />,
+    },
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      {items.map((item) => (
-        <div
-          key={item.key}
-          className="bg-white p-6 rounded-xl shadow-md flex flex-col items-start hover:shadow-lg transition-shadow"
-        >
-          <div className="flex items-center gap-3 mb-2 text-gray-500">
-            <div className="text-2xl">{item.icon}</div>
-            <span className="font-semibold">{item.label}</span>
+    <div className="space-y-6">
+      <h2 className="text-xl font-bold text-gray-800">
+        Tableau de bord – Statistiques
+      </h2>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {items.map((item, idx) => (
+          <div
+            key={idx}
+            className="bg-white p-6 rounded-xl shadow flex items-center gap-4 hover:shadow-lg transition"
+          >
+            <div className="text-3xl">{item.icon}</div>
+
+            <div>
+              <p className="text-sm text-gray-500">{item.label}</p>
+              <p className="text-3xl font-bold text-gray-800">
+                {loading ? "…" : item.value}
+              </p>
+            </div>
           </div>
-          <div className="text-3xl font-bold text-gray-800">
-            {loading ? "..." : stats[item.key] ?? 0}
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
+
       {error && (
-        <p className="col-span-full text-red-600 font-medium bg-red-50 p-4 rounded-xl">
+        <div className="bg-red-50 text-red-700 p-4 rounded-xl font-medium">
           {error}
-        </p>
+        </div>
       )}
     </div>
   );
